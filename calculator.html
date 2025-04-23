@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoTrack - Carbon Calculator</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#2E7D32', secondary: '#1976D2' },
+          borderRadius: {
+            'none': '0px', 'sm': '4px', DEFAULT: '8px', 'md': '12px',
+            'lg': '16px', 'xl': '20px', '2xl': '24px', '3xl': '32px',
+            'full': '9999px', 'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8f9fa;
+    }
+
+    .card {
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .collapsible-header:hover {
+      background-color: #f1f5f9;
+    }
+
+    .collapsible-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .collapsible-content.open {
+      max-height: 500px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      border-radius: 5px;
+      background: linear-gradient(to right, #2E7D32 0%, #2E7D32 var(--value), #e5e7eb var(--value), #e5e7eb 100%);
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #2E7D32;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #2E7D32;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      border: none;
+      transition: transform 0.2s;
+    }
+
+    input[type="range"]:hover::-webkit-slider-thumb,
+    input[type="range"]:hover::-moz-range-thumb {
+      transform: scale(1.2);
+    }
+
+    select {
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    select:focus {
+      border-color: #2E7D32;
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+    }
+
+    .result-panel {
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+
+    .result-panel.open {
+      transform: translateY(0);
+    }
+
+    .submit-button:hover {
+      animation: pulse 0.5s;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .card {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-green-50 to-lime-50 text-gray-700">
+  <header class="shadow-sm bg-white sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center p-4">
+      <h1 class="text-xl font-semibold text-green-700 flex items-center gap-2">
+        <img src="https://img.icons8.com/ios-filled/50/26e07f/leaf.png" alt="logo" class="w-5 h-5"> EcoTrack
+      </h1>
+      <nav class="flex items-center space-x-4 hidden md:block">
+        <a href="index.html" class="text-green-600 hover:underline inline-flex items-center">Home</a>
+        <a href="calculator.html" class="text-green-600 underline inline-flex items-center">Calculator</a>
+        <a href="dashboard.html" class="text-green-600 hover:underline inline-flex items-center">Dashboard</a>
+        <a href="about.html" class="text-green-600 hover:underline inline-flex items-center">About</a>
+        <a href="info.html" class="text-green-600 hover:underline inline-flex items-center">Info</a>
+        <a href="admin_login.html" class="text-green-600 hover:underline inline-flex items-center gap-1">
+          <i class="ri-shield-keyhole-line"></i>
+          Admin
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto p-6 mt-10">
+    <h2 class="text-3xl font-semibold text-primary mb-8 text-center">🌱 Carbon Footprint Calculator</h2>
+    <form id="calculator-form" class="space-y-6" onsubmit="saveFootprint(event)">
+      <!-- Energy Section -->
+      <div class="bg-white rounded-xl shadow-sm p-6 card">
+        <div class="collapsible-header flex justify-between items-center cursor-pointer"
+          onclick="toggleCollapsible(this)">
+          <h3 class="text-lg font-medium text-gray-800">Energy Usage</h3>
+          <i class="ri-arrow-down-s-line ri-lg text-gray-600"></i>
+        </div>
+        <div class="collapsible-content open">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
+            <div>
+              <label class="block text-sm mb-1 text-gray-600">Electricity (kWh/month): <span id="val-electricity"
+                  class="font-medium text-gray-800">150</span></label>
+              <input type="range" id="electricity" min="0" max="1000" value="150" class="w-full"
+                oninput="this.style.setProperty('--value', (this.value / this.max) * 100 + '%')">
+            </div>
+            <div>
+              <label class="block text-sm mb-1 text-gray-600">Gas (m³/month): <span id="val-gas"
+                  class="font-medium text-gray-800">100</span></label>
+              <input type="range" id="gas" min="0" max="500" value="100" class="w-full"
+                oninput="this.style.setProperty('--value', (this.value / this.max) * 100 + '%')">
+            </div>
+            <div>
+              <label class="block text-sm mb-1 text-gray-600">Water Usage (L/month): <span id="val-water"
+                  class="font-medium text-gray-800">500</span></label>
+              <input type="range" id="water" min="0" max="5000" value="500" class="w-full"
+                oninput="this.style.setProperty('--value', (this.value / this.max) * 100 + '%')">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Transportation Section -->
+      <div class="bg-white rounded-xl shadow-sm p-6 card">
+        <div class="collapsible-header flex justify-between items-center cursor-pointer"
+          onclick="toggleCollapsible(this)">
+          <h3 class="text-lg font-medium text-gray-800">Transportation</h3>
+          <i class="ri-arrow-down-s-line ri-lg text-gray-600"></i>
+        </div>
+        <div class="collapsible-content open">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
+            <div>
+              <label class="block text-sm mb-1 text-gray-600">Vehicle Type</label>
+              <select id="vehicleType" class="w-full p-2 border border-gray-300 rounded text-sm">
+                <option value="car">Car</option>
+                <option value="bike">Bike</option>
+                <option value="bus">Bus</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm mb-1 text-gray-600">Travel Distance (km/week): <span id="val-travelKm"
+                  class="font-medium text-gray-800">30</span></label>
+              <input type="range" id="travelKm" min="0" max="500" value="30" class="w-full"
+                oninput="this.style.setProperty('--value', (this.value / this.max) * 100 + '%')">
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Lifestyle Section -->
+      <div class="bg-white rounded-xl shadow-sm p-6 card">
+        <div class="collapsible-header flex justify-between items-center cursor-pointer"
+          onclick="toggleCollapsible(this)">
+          <h3 class="text-lg font-medium text-gray-800">Lifestyle</h3>
+          <i class="ri-arrow-down-s-line ri-lg text-gray-600"></i>
+        </div>
+        <div class="collapsible-content open">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
+            <div>
+              <label class="block text-sm mb-1 text-gray-600">Monthly Shopping (₹): <span id="val-shopping"
+                  class="font-medium text-gray-800">1000</span></label>
+              <input type="range" id="shopping" min="0" max="10000" value="1000" class="w-full"
+                oninput="this.style.setProperty('--value', (this.value / this.max) * 100 + '%')">
+            </div>
+            <div>
+              <label class="block text-sm mb-1 text-gray-600">Diet</label>
+              <select id="diet" class="w-full p-2 border border-gray-300 rounded text-sm">
+                <option value="vegetarian">Vegetarian</option>
+                <option value="non-vegetarian">Non-Vegetarian</option>
+                <option value="vegan">Vegan</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm mb-1 text-gray-600">Waste Generation (kg/month): <span id="val-waste"
+                  class="font-medium text-gray-800">30</span></label>
+              <input type="range" id="waste" min="0" max="200" value="30" class="w-full"
+                oninput="this.style.setProperty('--value', (this.value / this.max) * 100 + '%')">
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="submit"
+        class="submit-button w-full bg-primary text-white text-sm py-3 !rounded-button hover:bg-primary/90 transition-colors font-medium">Calculate</button>
+    </form>
+
+    <div id="result" class="fixed bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-lg p-6 result-panel hidden">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold text-primary">Your Monthly Emissions</h3>
+        <button onclick="document.getElementById('result').classList.remove('open', 'hidden')"
+          class="text-gray-500 hover:text-gray-700">
+          <i class="ri-close-line ri-lg"></i>
+        </button>
+      </div>
+      <p class="text-base text-gray-700 mb-4">Estimated: <span id="totalEmission"
+          class="font-semibold text-primary"></span> kg CO₂e</p>
+      <div class="w-full bg-gray-200 rounded-full h-3">
+        <div id="emissionBar" class="bg-primary h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+      <p class="text-xs text-gray-500 mt-2">Redirecting to dashboard in 2 seconds...</p>
+    </div>
+  </main>
+
+  <script>
+    const updateVal = (id) => {
+      const input = document.getElementById(id);
+      document.getElementById(`val-${id}`).innerText = input.value;
+      input.style.setProperty('--value', (input.value / input.max) * 100 + '%');
+    };
+
+    ["electricity", "gas", "travelKm", "shopping", "water", "waste"].forEach(id => {
+      const input = document.getElementById(id);
+      input.addEventListener("input", () => updateVal(id));
+      updateVal(id);
+    });
+
+    function toggleCollapsible(header) {
+      const content = header.nextElementSibling;
+      const icon = header.querySelector('i');
+      content.classList.toggle('open');
+      icon.classList.toggle('ri-arrow-down-s-line');
+      icon.classList.toggle('ri-arrow-up-s-line');
+    }
+
+    document.getElementById("calculator-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const inputs = {
+        electricity: parseFloat(document.getElementById("electricity").value),
+        gas: parseFloat(document.getElementById("gas").value),
+        vehicleType: document.getElementById("vehicleType").value,
+        travelKm: parseFloat(document.getElementById("travelKm").value),
+        shopping: parseFloat(document.getElementById("shopping").value),
+        diet: document.getElementById("diet").value,
+        water: parseFloat(document.getElementById("water").value),
+        waste: parseFloat(document.getElementById("waste").value)
+      };
+
+      const emissionFactor = {
+        electricity: 0.85,
+        gas: 2.1,
+        car: 0.21,
+        bike: 0.1,
+        bus: 0.08,
+        none: 0,
+        shopping: 0.02,
+        vegetarian: 1.5,
+        nonVegetarian: 3.5,
+        vegan: 1.0,
+        water: 0.001,
+        waste: 1.2
+      };
+
+      const travelEmission = inputs.travelKm * emissionFactor[inputs.vehicleType] * 4;
+      const totalEmission =
+        inputs.electricity * emissionFactor.electricity +
+        inputs.gas * emissionFactor.gas +
+        travelEmission +
+        inputs.shopping * emissionFactor.shopping +
+        emissionFactor[inputs.diet.replace("-", "")] +
+        inputs.water * emissionFactor.water +
+        inputs.waste * emissionFactor.waste;
+
+      localStorage.setItem("lastEmission", totalEmission);
+      localStorage.setItem("calculatorInputs", JSON.stringify(inputs));
+
+      const resultPanel = document.getElementById("result");
+      resultPanel.classList.remove("hidden");
+      resultPanel.classList.add("open");
+      document.getElementById("totalEmission").textContent = totalEmission.toFixed(2);
+      const barWidth = (totalEmission / 500) * 100; // Scale to 500 kg max for visual
+      document.getElementById("emissionBar").style.width = `${Math.min(barWidth, 100)}%`;
+
+      setTimeout(() => window.location.href = "dashboard.html", 2000);
+    });
+  </script>
+  <script>
+    async function saveFootprint(event) {
+      event.preventDefault();
+      
+      const data = {
+        electricity: parseFloat(document.getElementById('electricity').value),
+        gas: parseFloat(document.getElementById('gas').value),
+        vehicleType: document.getElementById('vehicleType').value,
+        travelKm: parseFloat(document.getElementById('travelKm').value),
+        water: parseFloat(document.getElementById('water').value),
+        waste: parseFloat(document.getElementById('waste').value),
+        shopping: document.getElementById('shopping').value,
+        diet: document.getElementById('diet').value,
+        totalEmission: calculateTotalEmission()
+      };
+
+      try {
+        const response = await fetch('php/save_footprint.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          alert('Your carbon footprint has been saved successfully!');
+          window.location.href = 'dashboard.html';
+        } else {
+          throw new Error(result.error || 'Failed to save data');
+        }
+      } catch (error) {
+        alert('Error saving data: ' + error.message);
+      }
+    }
+
+    function calculateTotalEmission() {
+      // Get all the values
+      const electricity = parseFloat(document.getElementById('electricity').value);
+      const gas = parseFloat(document.getElementById('gas').value);
+      const water = parseFloat(document.getElementById('water').value);
+      const vehicleType = document.getElementById('vehicleType').value;
+      const travelKm = parseFloat(document.getElementById('travelKm').value);
+      
+      // Calculate emissions
+      const electricityEmission = electricity * 0.5; // kWh to kg CO2
+      const gasEmission = gas * 2.3; // m³ to kg CO2
+      const waterEmission = water * 0.001; // L to kg CO2
+      
+      // Vehicle emissions
+      let vehicleEmission = 0;
+      if (vehicleType === 'car') {
+        vehicleEmission = travelKm * 0.2; // km to kg CO2
+      } else if (vehicleType === 'bike') {
+        vehicleEmission = travelKm * 0.05;
+      }
+      
+      return electricityEmission + gasEmission + waterEmission + vehicleEmission;
+    }
+  </script>
+</body>
+
+</html>

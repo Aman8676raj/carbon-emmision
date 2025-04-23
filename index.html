@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoTrack - Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet">
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const storedTheme = localStorage.getItem("theme") || "light";
+      document.documentElement.classList.toggle("dark", storedTheme === "dark");
+      const toggle = document.getElementById("theme-toggle");
+      if (toggle) {
+        toggle.checked = storedTheme === "dark";
+        toggle.addEventListener("change", () => {
+          const newTheme = toggle.checked ? "dark" : "light";
+          localStorage.setItem("theme", newTheme);
+          document.documentElement.classList.toggle("dark", toggle.checked);
+        });
+      }
+    });
+  </script>
+  <style>
+    .dark .dark\:bg-gray-900 {
+      background-color: #1a202c;
+    }
+
+    .dark .dark\:text-white {
+      color: white;
+    }
+
+    .dark .dark\:bg-green-800 {
+      background-color: #22543d;
+    }
+
+    .dark .dark\:bg-green-700 {
+      background-color: #276749;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      border-radius: 5px;
+      background: #e5e7eb;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #16a34a;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #16a34a;
+      cursor: pointer;
+      border: none;
+    }
+
+    .diet-label {
+      transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .diet-label:hover {
+      transform: scale(1.02);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .peer-checked+.diet-label {
+      transform: scale(1.02);
+      background-color: #d1fae5 !important;
+      border-color: #16a34a !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .dark .peer-checked+.diet-label {
+      background-color: #065f46 !important;
+    }
+
+    .calculate-button:active {
+      animation: bounce 0.2s;
+    }
+
+    @keyframes bounce {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(0.9);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .result-fade {
+      transition: opacity 0.3s ease;
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-green-100 to-green-50 text-gray-800 dark:bg-gray-900 dark:text-white">
+  <header class="shadow-md bg-white dark:bg-green-800 sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center p-4">
+      <h1 class="text-2xl font-bold text-green-700 dark:text-white flex items-center gap-2">
+        <img src="https://img.icons8.com/ios-filled/50/26e07f/leaf.png" alt="logo" class="w-6 h-6">EcoTrack
+      </h1>
+      <nav class="flex items-center space-x-6">
+        <a href="index.html" class="text-green-700 hover:underline dark:text-white inline-flex items-center">Home</a>
+        <a href="calculator.html" class="text-green-700 hover:underline dark:text-white inline-flex items-center">Calculator</a>
+        <a href="dashboard.html" class="text-green-700 hover:underline dark:text-white inline-flex items-center">Dashboard</a>
+        <a href="about.html" class="text-green-700 hover:underline dark:text-white inline-flex items-center">About</a>
+        <a href="info.html" class="text-green-700 hover:underline dark:text-white inline-flex items-center">Info</a>
+        <a href="admin_login.html" class="text-green-700 hover:underline dark:text-white inline-flex items-center gap-1">
+          <i class="ri-shield-keyhole-line"></i>
+          Admin
+        </a>
+      </nav>
+      <div class="flex items-center gap-4">
+        <a href="login.html"
+          class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-full transition duration-300">Login</a>
+        <a href="signup.html"
+          class="bg-white border-2 border-green-600 text-green-600 hover:bg-green-100 px-4 py-2 rounded-full transition duration-300">Signup</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="flex flex-col items-center justify-center text-center py-24 px-6 md:px-20">
+    <h2 class="text-4xl md:text-5xl font-bold mb-6 text-green-800 dark:text-white animate-pulse">Track Your Carbon
+      Footprint</h2>
+    <p class="text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mb-8">
+      EcoTrack helps you monitor, analyze, and reduce your household carbon emissions to make a greener impact.
+    </p>
+    <a href="calculator.html"
+      class="px-6 py-3 bg-green-600 text-white rounded-full shadow-lg hover:bg-green-700 transition-transform transform hover:scale-105">
+      Start Calculating
+    </a>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-16 bg-white dark:bg-gray-800">
+    <div class="container mx-auto text-center mb-10">
+      <h3 class="text-3xl font-bold text-green-700 dark:text-white mb-4">Key Features of Our Carbon Emission Calculator
+      </h3>
+      <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Explore the powerful tools EcoTrack provides to
+        support your sustainability journey.</p>
+    </div>
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
+      <div class="bg-green-50 dark:bg-gray-700 p-6 rounded-xl shadow">
+        <h4 class="text-xl font-bold mb-2 text-green-700 dark:text-white">Carbon Calculator</h4>
+        <p class="text-gray-600 dark:text-gray-300">Estimate emissions from daily activities like energy use, transport,
+          and lifestyle choices.</p>
+      </div>
+      <div class="bg-green-50 dark:bg-gray-700 p-6 rounded-xl shadow">
+        <h4 class="text-xl font-bold mb-2 text-green-700 dark:text-white">Visual Dashboard</h4>
+        <p class="text-gray-600 dark:text-gray-300">Visualize your carbon breakdown using charts and trends to stay
+          informed.</p>
+      </div>
+      <div class="bg-green-50 dark:bg-gray-700 p-6 rounded-xl shadow">
+        <h4 class="text-xl font-bold mb-2 text-green-700 dark:text-white">Real-Time Climate Info</h4>
+        <p class="text-gray-600 dark:text-gray-300">Access real-time climate and emission data from reliable open APIs.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Carbon Estimate Section -->
+  <section class="py-16 bg-green-50 dark:bg-gray-700">
+    <div class="container mx-auto px-6">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center max-h-96 min-h-0 overflow-auto">
+          <div class="p-6 md:p-8 flex-1 border-r border-gray-200 dark:border-gray-600">
+            <h2 class="text-2xl font-bold text-green-700 dark:text-white mb-4">Quick Carbon Estimate</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-6 text-sm">Answer a few questions to estimate your carbon
+              footprint.</p>
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Transportation</label>
+                <div class="flex items-center">
+                  <span class="text-gray-500 dark:text-gray-400 mr-2 text-xs">Rarely</span>
+                  <input type="range" id="transportation" class="flex-grow" min="1" max="5" value="3">
+                  <span class="text-gray-500 dark:text-gray-400 ml-2 text-xs">Frequently</span>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Home Energy Usage</label>
+                <div class="flex items-center">
+                  <span class="text-gray-500 dark:text-gray-400 mr-2 text-xs">Low</span>
+                  <input type="range" id="energy" class="flex-grow" min="1" max="5" value="3">
+                  <span class="text-gray-500 dark:text-gray-400 ml-2 text-xs">High</span>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Diet</label>
+                <div class="grid grid-cols-3 gap-2">
+                  <div class="flex items-center">
+                    <input type="radio" id="diet-plant" name="diet" class="hidden peer">
+                    <label for="diet-plant"
+                      class="diet-label flex items-center justify-center px-2 py-1 border rounded-md cursor-pointer text-xs w-full text-center bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 peer-checked:bg-green-100 dark:peer-checked:bg-green-700 peer-checked:border-green-600">Plant-based</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input type="radio" id="diet-vegetarian" name="diet" class="hidden peer">
+                    <label for="diet-vegetarian"
+                      class="diet-label flex items-center justify-center px-2 py-1 border rounded-md cursor-pointer text-xs w-full text-center bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 peer-checked:bg-green-100 dark:peer-checked:bg-green-700 peer-checked:border-green-600">Vegetarian</label>
+                  </div>
+                  <div class="flex items-center">
+                    <input type="radio" id="diet-omnivore" name="diet" class="hidden peer" checked>
+                    <label for="diet-omnivore"
+                      class="diet-label flex items-center justify-center px-2 py-1 border rounded-md cursor-pointer text-xs w-full text-center bg-green-100 dark:bg-green-700 border-green-600">Omnivore</label>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Shopping Habits</label>
+                <div class="flex items-center">
+                  <span class="text-gray-500 dark:text-gray-400 mr-2 text-xs">Minimal</span>
+                  <input type="range" id="shopping" class="flex-grow" min="1" max="5" value="3">
+                  <span class="text-gray-500 dark:text-gray-400 ml-2 text-xs">Frequent</span>
+                </div>
+              </div>
+              <button id="calculate"
+                class="calculate-button bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition-all duration-200 font-medium w-full text-sm">Calculate
+                Estimate</button>
+            </div>
+          </div>
+          <div class="p-6 md:p-8 flex-1 bg-gray-100 dark:bg-gray-900">
+            <div class="text-center mb-4">
+              <h3 class="text-lg font-semibold text-green-700 dark:text-white mb-2">Your Estimated Footprint</h3>
+              <p class="text-gray-600 dark:text-gray-300 text-xs">Based on your inputs</p>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm result-fade opacity-100">
+              <div class="flex justify-between items-center mb-3">
+                <span class="text-gray-700 dark:text-gray-300 font-medium text-sm">Annual Carbon Footprint</span>
+                <span id="footprint" class="text-xl font-bold text-gray-900 dark:text-white">8.2 tonnes CO₂e</span>
+              </div>
+              <div class="h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
+                <div id="progress" class="h-full bg-green-600 rounded-full transition-all duration-500"
+                  style="width: 65%"></div>
+              </div>
+              <div class="flex justify-between mt-2 text-xs text-gray-500 dark:text-gray-400">
+                <span>0 tonnes</span>
+                <span>Global Average: 4.7 tonnes</span>
+                <span>15 tonnes</span>
+              </div>
+            </div>
+            <div class="text-center mt-4">
+              <p class="text-gray-600 dark:text-gray-300 text-xs mb-2">For a more accurate calculation:</p>
+              <a href="calculator.html"
+                class="text-green-600 dark:text-green-400 font-medium text-xs hover:underline">Complete the Full
+                Calculator →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact Stats Section -->
+  <section class="py-16 bg-white dark:bg-gray-800">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-green-700 dark:text-white mb-4">Our Collective Impact</h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Together, our community is making a
+          significant difference in reducing carbon emissions across India.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">12,500</div>
+          <p class="text-gray-600 dark:text-gray-300">Active Users</p>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">30,000</div>
+          <p class="text-gray-600 dark:text-gray-300">Tonnes CO₂e Reduced</p>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">50,000</div>
+          <p class="text-gray-600 dark:text-gray-300">Actions Taken</p>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">₹1.5M</div>
+          <p class="text-gray-600 dark:text-gray-300">Estimated Savings</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="py-16 bg-green-50 dark:bg-gray-700">
+    <div class="container mx-auto text-center mb-10">
+      <h3 class="text-3xl font-bold text-green-700 dark:text-white mb-4">What Indians Say About EcoTrack</h3>
+      <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Our users are making a difference with EcoTrack,
+        here’s how it’s helping them.</p>
+    </div>
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+        <div class="mb-4 flex">
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+        </div>
+        <p class="text-gray-600 dark:text-gray-300 italic">"EcoTrack helped me realize how much I could reduce my carbon
+          footprint just by changing a few daily habits!"</p>
+        <p class="mt-4 font-bold text-green-700 dark:text-white">Anjali Sharma, Mumbai</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+        <div class="mb-4 flex">
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+          <i class="ri-star-half-fill text-yellow-400 w-4 h-4"></i>
+        </div>
+        <p class="text-gray-600 dark:text-gray-300 italic">"Thanks to EcoTrack's clear breakdown, I’ve been able to cut
+          down on my energy consumption significantly."</p>
+        <p class="mt-4 font-bold text-green-700 dark:text-white">Rajiv Patel, Delhi</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
+        <div class="mb-4 flex">
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+          <i class="ri-star-fill text-yellow-400 w-4 h-4"></i>
+        </div>
+        <p class="text-gray-600 dark:text-gray-300 italic">"I feel empowered knowing the exact impact of my actions and
+          how to improve!"</p>
+        <p class="mt-4 font-bold text-green-700 dark:text-white">Priya Kumar, Bangalore</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-16 bg-green-100 dark:bg-gray-800">
+    <div class="container mx-auto px-6">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+        <div class="p-8 md:p-12 flex flex-col justify-center">
+          <h2 class="text-3xl font-bold text-green-700 dark:text-white mb-6">Ready to Make a Difference?</h2>
+          <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">Join thousands of Indians who are taking control of
+            their environmental impact and making positive changes for our planet.</p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="signup.html"
+              class="bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700 transition-colors font-medium">Create
+              Free Account</a>
+            <a href="about.html"
+              class="bg-white dark:bg-gray-700 border-2 border-green-600 text-green-600 dark:text-green-400 px-6 py-3 rounded-full hover:bg-green-100 dark:hover:bg-gray-600 transition-colors font-medium">Learn
+              More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Section -->
+  <section class="py-16 bg-white dark:bg-gray-800">
+    <div class="container mx-auto px-6">
+      <div class="max-w-2xl mx-auto text-center">
+        <h2 class="text-3xl font-bold text-green-700 dark:text-white mb-4">Stay Updated</h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">Subscribe to our newsletter for the latest
+          environmental news, tips, and updates on our platform.</p>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input type="email" placeholder="Your email address"
+            class="flex-grow px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-green-600 dark:bg-gray-700 dark:text-white">
+          <button
+            class="bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700 transition-colors font-medium">Subscribe</button>
+        </div>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-4">We respect your privacy. Unsubscribe at any time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="py-8 bg-green-700 dark:bg-green-800 text-white text-center">
+    <p>© 2025 EcoTrack. All rights reserved.</p>
+    <div class="mt-4">
+      <a href="privacy.html" class="text-white hover:underline">Privacy Policy</a> |
+      <a href="terms.html" class="text-white hover:underline">Terms of Service</a>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const calculateButton = document.getElementById('calculate');
+      const transportationInput = document.getElementById('transportation');
+      const energyInput = document.getElementById('energy');
+      const dietInputs = document.querySelectorAll('[name="diet"]');
+      const shoppingInput = document.getElementById('shopping');
+      const footprintDisplay = document.getElementById('footprint');
+      const progressBar = document.getElementById('progress');
+      const resultContainer = document.querySelector('.result-fade');
+
+      if (!calculateButton || !transportationInput || !energyInput || !dietInputs || !shoppingInput || !footprintDisplay || !progressBar || !resultContainer) {
+        console.error('One or more DOM elements are missing.');
+        return;
+      }
+
+      calculateButton.addEventListener('click', function () {
+        resultContainer.classList.remove('opacity-100');
+        resultContainer.classList.add('opacity-0');
+
+        setTimeout(() => {
+          let transportation = parseInt(transportationInput.value) * 0.5;
+          let energy = parseInt(energyInput.value);
+          let diet = 0;
+          dietInputs.forEach(input => {
+            if (input.checked) {
+              if (input.id === 'diet-plant') diet = 1;
+              if (input.id === 'diet-vegetarian') diet = 2;
+              if (input.id === 'diet-omnivore') diet = 3;
+            }
+          });
+          let shopping = parseInt(shoppingInput.value) * 0.2;
+
+          let totalFootprint = transportation + energy + diet + shopping;
+          totalFootprint = Math.round(totalFootprint * 10) / 10;
+
+          footprintDisplay.textContent = `${totalFootprint} tonnes CO₂e`;
+          let progressWidth = (totalFootprint / 15) * 100;
+          progressBar.style.width = `${Math.min(progressWidth, 100)}%`;
+
+          resultContainer.classList.remove('opacity-0');
+          resultContainer.classList.add('opacity-100');
+        }, 300);
+      });
+
+      const dietOptions = document.querySelectorAll('[name="diet"]');
+      const dietLabels = document.querySelectorAll('[for^="diet-"]');
+      if (dietOptions.length !== dietLabels.length) {
+        console.error('Mismatch between diet options and labels.');
+        return;
+      }
+
+      dietOptions.forEach((option, index) => {
+        option.addEventListener('change', function () {
+          dietLabels.forEach(label => {
+            label.classList.replace('bg-green-100', 'bg-white');
+            label.classList.replace('dark:bg-green-700', 'dark:bg-gray-700');
+            label.classList.replace('border-green-600', 'border-gray-300');
+            label.classList.replace('dark:border-green-600', 'dark:border-gray-600');
+            label.classList.remove('scale-102');
+          });
+          if (this.checked && dietLabels[index]) {
+            dietLabels[index].classList.replace('bg-white', 'bg-green-100');
+            dietLabels[index].classList.replace('dark:bg-gray-700', 'dark:bg-green-700');
+            dietLabels[index].classList.replace('border-gray-300', 'border-green-600');
+            dietLabels[index].classList.replace('dark:border-gray-600', 'dark:border-green-600');
+            dietLabels[index].classList.add('scale-102');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>

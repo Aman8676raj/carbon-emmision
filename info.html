@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>India Carbon Emission Dashboard</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: "#15B8A6", secondary: "#475569" },
+          borderRadius: {
+            none: "0px",
+            sm: "4px",
+            DEFAULT: "8px",
+            md: "12px",
+            lg: "16px",
+            xl: "20px",
+            "2xl": "24px",
+            "3xl": "32px",
+            full: "9999px",
+            button: "8px",
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+  <style>
+    :where([class^="ri-"])::before {
+      content: "\f3c2";
+    }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background-color: #f9fafb;
+    }
+
+    .aqi-ticker {
+      animation: ticker-scroll 30s linear infinite;
+    }
+
+    @keyframes ticker-scroll {
+      0% {
+        transform: translateX(100%);
+      }
+
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .custom-checkbox {
+      position: relative;
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      background-color: #fff;
+      border: 2px solid #d1d5db;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .custom-checkbox.checked {
+      background-color: #1e40af;
+      border-color: #1e40af;
+    }
+
+    .custom-checkbox.checked::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 7px;
+      width: 6px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    .custom-switch {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 24px;
+    }
+
+    .custom-switch-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #e5e7eb;
+      border-radius: 24px;
+      transition: 0.4s;
+      cursor: pointer;
+    }
+
+    .custom-switch-thumb {
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.4s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-switch.active .custom-switch-track {
+      background-color: #1e40af;
+    }
+
+    .custom-switch.active .custom-switch-thumb {
+      transform: translateX(24px);
+    }
+
+    .custom-range {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #e5e7eb;
+      outline: none;
+    }
+
+    .custom-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #1e40af;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-range::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #1e40af;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border: none;
+    }
+
+    .tooltip {
+      visibility: hidden;
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+    }
+
+    .has-tooltip:hover .tooltip {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header Section -->
+  <header class="shadow-md bg-green-100 sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center p-4">
+      <h1 class="text-2xl font-bold text-green-700 flex items-center gap-2">
+        <img src="https://img.icons8.com/ios-filled/50/26e07f/leaf.png" alt="logo" class="w-6 h-6" />EcoTrack
+      </h1>
+      <nav class="space-x-4 hidden md:block">
+        <a href="index.html" class="text-green-700 font-semibold">Home</a>
+        <a href="calculator.html" class="text-green-700 hover:underline">Calculator</a>
+        <a href="dashboard.html" class="text-green-700 hover:underline">Dashboard</a>
+        <a href="about.html" class="text-green-700 hover:underline">About</a>
+        <a href="info.html" class="text-green-700 underline hover:underline">Info</a>
+      </nav>
+    </div>
+  </header>
+  <!-- Page Title and AQI Ticker -->
+  <div class="bg-gradient-to-r from-primary/10 to-primary/5 py-6">
+    <div class="container mx-auto px-4">
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+        India Carbon Emission Dashboard
+      </h1>
+      <p class="text-gray-600 max-w-3xl mb-4">
+        Comprehensive analysis and visualization of carbon emissions across
+        India, tracking environmental impact and climate change indicators.
+      </p>
+      <div class="bg-white rounded shadow-sm p-3 overflow-hidden relative">
+        <div class="flex items-center absolute left-0 top-0 bottom-0 bg-primary text-white px-4 z-10">
+          <div class="w-6 h-6 flex items-center justify-center mr-2">
+            <i class="ri-alert-line"></i>
+          </div>
+          <span class="font-medium">Live AQI:</span>
+        </div>
+        <div class="aqi-ticker pl-36 whitespace-nowrap text-gray-700">
+          <span class="inline-flex items-center mr-6">Delhi:
+            <span class="ml-1 px-2 py-0.5 bg-red-100 text-red-800 rounded-full text-xs font-medium">Very Poor
+              (312)</span></span>
+          <span class="inline-flex items-center mr-6">Mumbai:
+            <span class="ml-1 px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Moderate
+              (156)</span></span>
+          <span class="inline-flex items-center mr-6">Bangalore:
+            <span class="ml-1 px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-xs font-medium">Good
+              (52)</span></span>
+          <span class="inline-flex items-center mr-6">Kolkata:
+            <span class="ml-1 px-2 py-0.5 bg-orange-100 text-orange-800 rounded-full text-xs font-medium">Poor
+              (201)</span></span>
+          <span class="inline-flex items-center mr-6">Chennai:
+            <span class="ml-1 px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Moderate
+              (132)</span></span>
+          <span class="inline-flex items-center mr-6">Hyderabad:
+            <span class="ml-1 px-2 py-0.5 bg-green-100 text-green-800 rounded-full text-xs font-medium">Good
+              (87)</span></span>
+          <span class="inline-flex items-center mr-6">Ahmedabad:
+            <span class="ml-1 px-2 py-0.5 bg-orange-100 text-orange-800 rounded-full text-xs font-medium">Poor
+              (187)</span></span>
+          <span class="inline-flex items-center mr-6">Pune:
+            <span class="ml-1 px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">Moderate
+              (121)</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <main class="container mx-auto px-4 py-8">
+    <!-- Interactive Map Section -->
+    <!-- Key Metrics Dashboard -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <p class="text-sm text-gray-500">Total Carbon Emissions</p>
+            <h3 class="text-2xl font-bold text-gray-900">2.88 GT</h3>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+            <i class="ri-cloud-line"></i>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <span class="flex items-center text-green-600 text-sm font-medium">
+            <i class="ri-arrow-up-line mr-1"></i>
+            2.4%
+          </span>
+          <span class="text-xs text-gray-500 ml-2">from last year</span>
+        </div>
+        <div class="mt-4 h-12">
+          <div id="total-emissions-chart" class="w-full h-full"></div>
+        </div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <p class="text-sm text-gray-500">Year-over-Year Change</p>
+            <h3 class="text-2xl font-bold text-gray-900">+2.4%</h3>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+            <i class="ri-line-chart-line"></i>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <span class="flex items-center text-red-600 text-sm font-medium">
+            <i class="ri-arrow-up-line mr-1"></i>
+            0.7%
+          </span>
+          <span class="text-xs text-gray-500 ml-2">higher than target</span>
+        </div>
+        <div class="mt-4 h-12">
+          <div id="yoy-chart" class="w-full h-full"></div>
+        </div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <p class="text-sm text-gray-500">Per Capita Emissions</p>
+            <h3 class="text-2xl font-bold text-gray-900">1.96 Tons</h3>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+            <i class="ri-user-line"></i>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <span class="flex items-center text-green-600 text-sm font-medium">
+            <i class="ri-arrow-down-line mr-1"></i>
+            1.2%
+          </span>
+          <span class="text-xs text-gray-500 ml-2">from last year</span>
+        </div>
+        <div class="mt-4 h-12">
+          <div id="per-capita-chart" class="w-full h-full"></div>
+        </div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <p class="text-sm text-gray-500">Industrial vs Residential</p>
+            <h3 class="text-2xl font-bold text-gray-900">72% : 28%</h3>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+            <i class="ri-building-line"></i>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <span class="flex items-center text-gray-600 text-sm font-medium">
+            <i class="ri-arrow-right-line mr-1"></i>
+            Stable
+          </span>
+          <span class="text-xs text-gray-500 ml-2">ratio maintained</span>
+        </div>
+        <div class="mt-4 h-12">
+          <div id="split-chart" class="w-full h-full"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Visual Data Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-bold text-gray-900">
+            Historical Emission Trends
+          </h2>
+        </div>
+        <div class="h-80">
+          <div id="historical-trends-chart" class="w-full h-full"></div>
+        </div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-bold text-gray-900">
+            Sector-wise Emission Distribution
+          </h2>
+        </div>
+        <div class="h-80">
+          <div id="sector-distribution-chart" class="w-full h-full"></div>
+        </div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-bold text-gray-900">
+            Top Cities by Emissions
+          </h2>
+        </div>
+        <div class="h-80">
+          <div id="cities-comparison-chart" class="w-full h-full"></div>
+        </div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-bold text-gray-900">
+            Seasonal Emission Variations
+          </h2>
+        </div>
+        <div class="h-80">
+          <div id="seasonal-variations-chart" class="w-full h-full"></div>
+        </div>
+      </div>
+    </div>
+    <!-- City-wise Analysis -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">City-wise Analysis</h2>
+        <div class="flex items-center text-sm text-gray-500">
+          Showing top 5 cities by emissions
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                City
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Current Emissions
+                <button class="ml-1 text-gray-400 hover:text-gray-600">
+                  <i class="ri-arrow-up-down-line"></i>
+                </button>
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                YoY Change
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Major Contributors
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                AQI Status
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Trend
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="font-medium text-gray-900">Delhi</div>
+                <div class="text-sm text-gray-500">North India</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">76.5 MT CO₂e</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">+5.2%</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <div class="flex items-center">
+                  <span class="mr-2">Transportation</span>
+                  <div class="w-16 bg-gray-200 rounded-full h-2">
+                    <div class="bg-primary rounded-full h-2" style="width: 75%"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Very
+                  Poor (312)</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="w-24 h-12" id="trend-delhi"></div>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="font-medium text-gray-900">Mumbai</div>
+                <div class="text-sm text-gray-500">West India</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">62.3 MT CO₂e</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">-1.8%</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <div class="flex items-center">
+                  <span class="mr-2">Industry</span>
+                  <div class="w-16 bg-gray-200 rounded-full h-2">
+                    <div class="bg-primary rounded-full h-2" style="width: 68%"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Moderate
+                  (156)</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="w-24 h-12" id="trend-mumbai"></div>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="font-medium text-gray-900">Bangalore</div>
+                <div class="text-sm text-gray-500">South India</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">38.7 MT CO₂e</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">-3.2%</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <div class="flex items-center">
+                  <span class="mr-2">Power</span>
+                  <div class="w-16 bg-gray-200 rounded-full h-2">
+                    <div class="bg-primary rounded-full h-2" style="width: 52%"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Good
+                  (52)</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="w-24 h-12" id="trend-bangalore"></div>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="font-medium text-gray-900">Kolkata</div>
+                <div class="text-sm text-gray-500">East India</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">45.2 MT CO₂e</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">+0.7%</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <div class="flex items-center">
+                  <span class="mr-2">Industry</span>
+                  <div class="w-16 bg-gray-200 rounded-full h-2">
+                    <div class="bg-primary rounded-full h-2" style="width: 63%"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-orange-100 text-orange-800">Poor
+                  (201)</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="w-24 h-12" id="trend-kolkata"></div>
+              </td>
+            </tr>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="font-medium text-gray-900">Chennai</div>
+                <div class="text-sm text-gray-500">South India</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">32.8 MT CO₂e</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">-2.1%</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <div class="flex items-center">
+                  <span class="mr-2">Transportation</span>
+                  <div class="w-16 bg-gray-200 rounded-full h-2">
+                    <div class="bg-primary rounded-full h-2" style="width: 48%"></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Moderate
+                  (132)</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="w-24 h-12" id="trend-chennai"></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-6 text-sm text-gray-500">
+        Showing top 5 cities by emissions
+      </div>
+    </div>
+    <!-- Recent News & Updates -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-900">
+          Recent News & Updates
+        </h2>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="border border-gray-100 rounded-lg overflow-hidden shadow-sm">
+          <div class="h-48 bg-gray-100" style="
+                background-image: url('https://readdy.ai/api/search-image?query=Indian%20government%20officials%20discussing%20climate%20policy%20in%20a%20modern%20conference%20room%20with%20environmental%20charts%20and%20graphs%20visible%2C%20professional%20setting&width=600&height=400&seq=1&orientation=landscape');
+                background-size: cover;
+                background-position: object-top;
+              "></div>
+          <div class="p-4">
+            <div class="flex items-center text-xs text-gray-500 mb-2">
+              <span>April 15, 2025</span>
+              <span class="mx-2">•</span>
+              <span>Environmental Policy</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">
+              India Announces New Carbon Reduction Targets for 2030
+            </h3>
+            <p class="text-sm text-gray-600 mb-4">
+              The Indian government has unveiled ambitious new carbon
+              reduction targets aiming to cut emissions by 45% from 2005
+              levels by 2030, strengthening its commitment to the Paris
+              Agreement.
+            </p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500">Source: Ministry of Environment</span>
+            </div>
+          </div>
+        </div>
+        <div class="border border-gray-100 rounded-lg overflow-hidden shadow-sm">
+          <div class="h-48 bg-gray-100" style="
+                background-image: url('https://readdy.ai/api/search-image?query=Solar%20panels%20being%20installed%20on%20rooftops%20in%20an%20Indian%20urban%20area%2C%20with%20workers%20in%20safety%20gear%20mounting%20panels%2C%20city%20skyline%20visible%20in%20background&width=600&height=400&seq=2&orientation=landscape');
+                background-size: cover;
+                background-position: object-top;
+              "></div>
+          <div class="p-4">
+            <div class="flex items-center text-xs text-gray-500 mb-2">
+              <span>April 12, 2025</span>
+              <span class="mx-2">•</span>
+              <span>Renewable Energy</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">
+              Delhi Launches Massive Rooftop Solar Initiative
+            </h3>
+            <p class="text-sm text-gray-600 mb-4">
+              The Delhi government has launched a citywide rooftop solar
+              program aiming to install 500 MW of solar capacity by 2027,
+              offering substantial subsidies to residential and commercial
+              buildings.
+            </p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500">Source: Delhi Energy Department</span>
+            </div>
+          </div>
+        </div>
+        <div class="border border-gray-100 rounded-lg overflow-hidden shadow-sm">
+          <div class="h-48 bg-gray-100" style="
+                background-image: url('https://readdy.ai/api/search-image?query=Electric%20buses%20on%20Indian%20city%20streets%20with%20passengers%20boarding%2C%20modern%20urban%20setting%20with%20clear%20focus%20on%20the%20electric%20vehicle%20infrastructure&width=600&height=400&seq=3&orientation=landscape');
+                background-size: cover;
+                background-position: object-top;
+              "></div>
+          <div class="p-4">
+            <div class="flex items-center text-xs text-gray-500 mb-2">
+              <span>April 10, 2025</span>
+              <span class="mx-2">•</span>
+              <span>Transportation</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">
+              Mumbai Expands Electric Bus Fleet to Reduce Emissions
+            </h3>
+            <p class="text-sm text-gray-600 mb-4">
+              Mumbai's transportation authority has added 300 new electric
+              buses to its fleet, bringing the total to over 1,000 electric
+              vehicles in public transport, expected to reduce carbon
+              emissions by 30,000 tons annually.
+            </p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500">Source: Mumbai Transport Corporation</span>
+              <button class="text-primary text-sm font-medium whitespace-nowrap">
+                Read More
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="border border-gray-100 rounded-lg overflow-hidden shadow-sm">
+          <div class="h-48 bg-gray-100" style="
+                background-image: url('https://readdy.ai/api/search-image?query=Scientists%20in%20a%20laboratory%20analyzing%20air%20quality%20samples%20with%20advanced%20equipment%2C%20professional%20setting%20with%20multiple%20researchers%20in%20white%20lab%20coats&width=600&height=400&seq=4&orientation=landscape');
+                background-size: cover;
+                background-position: object-top;
+              "></div>
+          <div class="p-4">
+            <div class="flex items-center text-xs text-gray-500 mb-2">
+              <span>April 8, 2025</span>
+              <span class="mx-2">•</span>
+              <span>Research</span>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">
+              New Study Links Air Pollution to Declining Crop Yields in
+              Northern India
+            </h3>
+            <p class="text-sm text-gray-600 mb-4">
+              Researchers from the Indian Agricultural Research Institute have
+              published findings showing that increasing air pollution in the
+              Indo-Gangetic plain has reduced wheat and rice yields by up to
+              15% over the past decade.
+            </p>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500">Source: Environmental Science Journal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Detailed Analysis Panel -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Detailed Analysis</h2>
+      <div class="space-y-4">
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <button class="w-full flex justify-between items-center p-4 bg-gray-50 text-left focus:outline-none"
+            id="industry-btn">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+                <i class="ri-factory-line"></i>
+              </div>
+              <span class="font-medium text-gray-900">Industry-wise Breakdown</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400" id="industry-icon"></i>
+          </button>
+          <div class="p-4 hidden" id="industry-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p class="text-gray-600 mb-4">
+                  India's industrial sector contributes approximately 43% of
+                  the country's total carbon emissions, with steel, cement,
+                  and chemical manufacturing being the largest contributors.
+                </p>
+                <div class="space-y-3">
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Steel Industry</span>
+                      <span class="text-gray-900 font-medium">28%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 28%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Cement Production</span>
+                      <span class="text-gray-900 font-medium">22%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 22%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Chemical Manufacturing</span>
+                      <span class="text-gray-900 font-medium">18%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 18%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Textile Industry</span>
+                      <span class="text-gray-900 font-medium">12%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 12%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Other Industries</span>
+                      <span class="text-gray-900 font-medium">20%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 20%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="h-64">
+                <div id="industry-chart" class="w-full h-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <button class="w-full flex justify-between items-center p-4 bg-gray-50 text-left focus:outline-none"
+            id="transport-btn">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-3">
+                <i class="ri-car-line"></i>
+              </div>
+              <span class="font-medium text-gray-900">Transportation Emissions</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400" id="transport-icon"></i>
+          </button>
+          <div class="p-4 hidden" id="transport-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p class="text-gray-600 mb-4">
+                  The transportation sector accounts for approximately 28% of
+                  India's carbon emissions, with road transport being the
+                  dominant contributor. The growing vehicle fleet and
+                  increasing travel demand continue to drive emissions upward.
+                </p>
+                <div class="space-y-3">
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Private Vehicles</span>
+                      <span class="text-gray-900 font-medium">45%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 45%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Commercial Vehicles</span>
+                      <span class="text-gray-900 font-medium">32%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 32%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Railways</span>
+                      <span class="text-gray-900 font-medium">12%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 12%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Aviation</span>
+                      <span class="text-gray-900 font-medium">8%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 8%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Shipping</span>
+                      <span class="text-gray-900 font-medium">3%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 3%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="h-64">
+                <div id="transport-chart" class="w-full h-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <button class="w-full flex justify-between items-center p-4 bg-gray-50 text-left focus:outline-none"
+            id="power-btn">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 mr-3">
+                <i class="ri-flashlight-line"></i>
+              </div>
+              <span class="font-medium text-gray-900">Power Sector Emissions</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400" id="power-icon"></i>
+          </button>
+          <div class="p-4 hidden" id="power-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p class="text-gray-600 mb-4">
+                  The power sector remains the largest contributor to India's
+                  carbon emissions at approximately 49%. Despite significant
+                  growth in renewable energy capacity, coal-fired power plants
+                  continue to dominate the electricity generation mix.
+                </p>
+                <div class="space-y-3">
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Coal Power Plants</span>
+                      <span class="text-gray-900 font-medium">70%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 70%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Natural Gas</span>
+                      <span class="text-gray-900 font-medium">7%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 7%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Diesel Generators</span>
+                      <span class="text-gray-900 font-medium">3%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 3%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Transmission Losses</span>
+                      <span class="text-gray-900 font-medium">12%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 12%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Other Sources</span>
+                      <span class="text-gray-900 font-medium">8%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 8%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="h-64">
+                <div id="power-chart" class="w-full h-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="border border-gray-200 rounded-lg overflow-hidden">
+          <button class="w-full flex justify-between items-center p-4 bg-gray-50 text-left focus:outline-none"
+            id="agriculture-btn">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 mr-3">
+                <i class="ri-plant-line"></i>
+              </div>
+              <span class="font-medium text-gray-900">Agricultural Impact</span>
+            </div>
+            <i class="ri-arrow-down-s-line text-gray-400" id="agriculture-icon"></i>
+          </button>
+          <div class="p-4 hidden" id="agriculture-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p class="text-gray-600 mb-4">
+                  Agriculture contributes approximately 18% of India's
+                  greenhouse gas emissions, primarily through methane from
+                  rice cultivation and livestock, and nitrous oxide from
+                  fertilizer use.
+                </p>
+                <div class="space-y-3">
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Livestock (Enteric Fermentation)</span>
+                      <span class="text-gray-900 font-medium">42%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 42%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Rice Cultivation</span>
+                      <span class="text-gray-900 font-medium">25%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 25%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Fertilizer Use</span>
+                      <span class="text-gray-900 font-medium">18%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 18%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Agricultural Machinery</span>
+                      <span class="text-gray-900 font-medium">10%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 10%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-sm mb-1">
+                      <span class="text-gray-700">Crop Residue Burning</span>
+                      <span class="text-gray-900 font-medium">5%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                      <div class="bg-primary rounded-full h-2" style="width: 5%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="h-64">
+                <div id="agriculture-chart" class="w-full h-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- Footer Section -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Toggle sections in Detailed Analysis
+      const toggleSections = [
+        {
+          btn: "industry-btn",
+          content: "industry-content",
+          icon: "industry-icon",
+        },
+        {
+          btn: "transport-btn",
+          content: "transport-content",
+          icon: "transport-icon",
+        },
+        { btn: "power-btn", content: "power-content", icon: "power-icon" },
+        {
+          btn: "agriculture-btn",
+          content: "agriculture-content",
+          icon: "agriculture-icon",
+        },
+      ];
+      toggleSections.forEach((section) => {
+        const btn = document.getElementById(section.btn);
+        const content = document.getElementById(section.content);
+        const icon = document.getElementById(section.icon);
+        btn.addEventListener("click", function () {
+          if (content.classList.contains("hidden")) {
+            content.classList.remove("hidden");
+            icon.classList.remove("ri-arrow-down-s-line");
+            icon.classList.add("ri-arrow-up-s-line");
+          } else {
+            content.classList.add("hidden");
+            icon.classList.remove("ri-arrow-up-s-line");
+            icon.classList.add("ri-arrow-down-s-line");
+          }
+        });
+      });
+      // Initialize custom form elements
+      const checkboxes = document.querySelectorAll(".custom-checkbox");
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener("click", function () {
+          this.classList.toggle("checked");
+        });
+      });
+      const switches = document.querySelectorAll(".custom-switch");
+      switches.forEach((switchEl) => {
+        switchEl.addEventListener("click", function () {
+          this.classList.toggle("active");
+        });
+      });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+      // Total Emissions Mini Chart
+      const totalEmissionsChart = echarts.init(
+        document.getElementById("total-emissions-chart")
+      );
+      totalEmissionsChart.setOption({
+        animation: false,
+        grid: { top: 0, right: 0, bottom: 0, left: 0 },
+        xAxis: {
+          show: false,
+          type: "category",
+          data: ["2020", "2021", "2022", "2023", "2024", "2025"],
+        },
+        yAxis: { show: false, type: "value" },
+        series: [
+          {
+            data: [2.4, 2.5, 2.62, 2.75, 2.82, 2.88],
+            type: "line",
+            showSymbol: false,
+            smooth: true,
+            lineStyle: { color: "rgba(87, 181, 231, 1)" },
+            areaStyle: {
+              color: {
+                type: "linear",
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  { offset: 0, color: "rgba(87, 181, 231, 0.2)" },
+                  { offset: 1, color: "rgba(87, 181, 231, 0.01)" },
+                ],
+              },
+            },
+          },
+        ],
+      });
+      // YoY Change Mini Chart
+      const yoyChart = echarts.init(document.getElementById("yoy-chart"));
+      yoyChart.setOption({
+        animation: false,
+        grid: { top: 0, right: 0, bottom: 0, left: 0 },
+        xAxis: {
+          show: false,
+          type: "category",
+          data: ["2020", "2021", "2022", "2023", "2024", "2025"],
+        },
+        yAxis: { show: false, type: "value" },
+        series: [
+          {
+            data: [1.8, 4.2, 4.8, 5.0, 2.5, 2.4],
+            type: "line",
+            showSymbol: false,
+            smooth: true,
+            lineStyle: { color: "rgba(141, 211, 199, 1)" },
+            areaStyle: {
+              color: {
+                type: "linear",
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  { offset: 0, color: "rgba(141, 211, 199, 0.2)" },
+                  { offset: 1, color: "rgba(141, 211, 199, 0.01)" },
+                ],
+              },
+            },
+          },
+        ],
+      });
+      // Per Capita Mini Chart
+      const perCapitaChart = echarts.init(
+        document.getElementById("per-capita-chart")
+      );
+      perCapitaChart.setOption({
+        animation: false,
+        grid: { top: 0, right: 0, bottom: 0, left: 0 },
+        xAxis: {
+          show: false,
+          type: "category",
+          data: ["2020", "2021", "2022", "2023", "2024", "2025"],
+        },
+        yAxis: { show: false, type: "value" },
+        series: [
+          {
+            data: [1.85, 1.92, 1.99, 2.03, 1.98, 1.96],
+            type: "line",
+            showSymbol: false,
+            smooth: true,
+            lineStyle: { color: "rgba(251, 191, 114, 1)" },
+            areaStyle: {
+              color: {
+                type: "linear",
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  { offset: 0, color: "rgba(251, 191, 114, 0.2)" },
+                  { offset: 1, color: "rgba(251, 191, 114, 0.01)" },
+                ],
+              },
+            },
+          },
+        ],
+      });
+      // Split Mini Chart
+      const splitChart = echarts.init(document.getElementById("split-chart"));
+      splitChart.setOption({
+        animation: false,
+        grid: { top: 0, right: 0, bottom: 0, left: 0 },
+        xAxis: {
+          show: false,
+          type: "category",
+          data: ["2020", "2021", "2022", "2023", "2024", "2025"],
+        },
+        yAxis: { show: false, type: "value" },
+        series: [
+          {
+            data: [70, 71, 72, 73, 72, 72],
+            type: "line",
+            showSymbol: false,
+            smooth: true,
+            lineStyle: { color: "rgba(252, 141, 98, 1)" },
+            areaStyle: {
+              color: {
+                type: "linear",
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  { offset: 0, color: "rgba(252, 141, 98, 0.2)" },
+                  { offset: 1, color: "rgba(252, 141, 98, 0.01)" },
+                ],
+              },
+            },
+          },
+        ],
+      });
+      // City Trend Charts
+      const cityTrends = [
+        { id: "trend-delhi", data: [65, 68, 72, 75, 76.5] },
+        { id: "trend-mumbai", data: [64, 65, 63.5, 63.4, 62.3] },
+        { id: "trend-bangalore", data: [42, 41, 40, 39.5, 38.7] },
+        { id: "trend-kolkata", data: [44, 44.5, 44.8, 45, 45.2] },
+        { id: "trend-chennai", data: [35, 34.5, 33.8, 33.5, 32.8] },
+      ];
+      cityTrends.forEach((city) => {
+        const chart = echarts.init(document.getElementById(city.id));
+        chart.setOption({
+          animation: false,
+          grid: { top: 0, right: 0, bottom: 0, left: 0 },
+          xAxis: {
+            show: false,
+            type: "category",
+            data: ["2021", "2022", "2023", "2024", "2025"],
+          },
+          yAxis: { show: false, type: "value" },
+          series: [
+            {
+              data: city.data,
+              type: "line",
+              showSymbol: false,
+              smooth: true,
+              lineStyle: {
+                color:
+                  city.data[city.data.length - 1] > city.data[0]
+                    ? "rgba(239, 68, 68, 0.8)"
+                    : "rgba(34, 197, 94, 0.8)",
+              },
+              areaStyle: {
+                color: {
+                  type: "linear",
+                  x: 0,
+                  y: 0,
+                  x2: 0,
+                  y2: 1,
+                  colorStops: [
+                    {
+                      offset: 0,
+                      color:
+                        city.data[city.data.length - 1] > city.data[0]
+                          ? "rgba(239, 68, 68, 0.2)"
+                          : "rgba(34, 197, 94, 0.2)",
+                    },
+                    {
+                      offset: 1,
+                      color:
+                        city.data[city.data.length - 1] > city.data[0]
+                          ? "rgba(239, 68, 68, 0.01)"
+                          : "rgba(34, 197, 94, 0.01)",
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        });
+      });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+      // Historical Trends Chart
+      const historicalTrendsChart = echarts.init(
+        document.getElementById("historical-trends-chart")
+      );
+      historicalTrendsChart.setOption({
+        animation: false,
+        tooltip: {
+          trigger: "axis",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          borderColor: "#e5e7eb",
+          textStyle: { color: "#1f2937" },
+        },
+        grid: { top: 10, right: 30, bottom: 30, left: 60 },
+        xAxis: {
+          type: "category",
+          data: [
+            "2010",
+            "2011",
+            "2012",
+            "2013",
+            "2014",
+            "2015",
+            "2016",
+            "2017",
+            "2018",
+            "2019",
+            "2020",
+            "2021",
+            "2022",
+            "2023",
+            "2024",
+            "2025",
+          ],
+          axisLabel: { color: "#1f2937" },
+        },
+        yAxis: {
+          type: "value",
+          name: "Emissions (GT CO₂e)",
+          nameTextStyle: { color: "#1f2937" },
+          axisLabel: { color: "#1f2937" },
+        },
+        series: [
+          {
+            name: "Total Emissions",
+            data: [
+              1.75, 1.82, 1.9, 1.97, 2.05, 2.12, 2.18, 2.25, 2.3, 2.35, 2.4,
+              2.5, 2.62, 2.75, 2.82, 2.88,
+            ],
+            type: "line",
+            smooth: true,
+            lineStyle: { color: "rgba(87, 181, 231, 1)" },
+            areaStyle: {
+              color: {
+                type: "linear",
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  { offset: 0, color: "rgba(87, 181, 231, 0.2)" },
+                  { offset: 1, color: "rgba(87, 181, 231, 0.01)" },
+                ],
+              },
+            },
+          },
+        ],
+      });
+      // Sector Distribution Chart
+      const sectorDistributionChart = echarts.init(
+        document.getElementById("sector-distribution-chart")
+      );
+      sectorDistributionChart.setOption({
+        animation: false,
+        tooltip: {
+          trigger: "item",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          borderColor: "#e5e7eb",
+          textStyle: { color: "#1f2937" },
+        },
+        legend: {
+          orient: "vertical",
+          right: 10,
+          top: "center",
+          textStyle: { color: "#1f2937" },
+        },
+        series: [
+          {
+            name: "Sector Distribution",
+            type: "pie",
+            radius: ["40%", "70%"],
+            avoidLabelOverlap: false,
+            itemStyle: {
+              borderRadius: 8,
+              borderColor: "#fff",
+              borderWidth: 2,
+            },
+            label: { show: false },
+            emphasis: {
+              label: { show: true, fontWeight: "bold" },
+            },
+            labelLine: { show: false },
+            data: [
+              {
+                value: 49,
+                name: "Power Generation",
+                itemStyle: { color: "rgba(87, 181, 231, 1)" },
+              },
+              {
+                value: 28,
+                name: "Transportation",
+                itemStyle: { color: "rgba(141, 211, 199, 1)" },
+              },
+              {
+                value: 18,
+                name: "Agriculture",
+                itemStyle: { color: "rgba(251, 191, 114, 1)" },
+              },
+              {
+                value: 5,
+                name: "Residential",
+                itemStyle: { color: "rgba(252, 141, 98, 1)" },
+              },
+            ],
+          },
+        ],
+      });
+      // Cities Comparison Chart
+      const citiesComparisonChart = echarts.init(
+        document.getElementById("cities-comparison-chart")
+      );
+      citiesComparisonChart.setOption({
+        animation: false,
+        tooltip: {
+          trigger: "axis",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          borderColor: "#e5e7eb",
+          textStyle: { color: "#1f2937" },
+        },
+        grid: { top: 10, right: 10, bottom: 30, left: 60 },
+        xAxis: {
+          type: "category",
+          data: [
+            "Delhi",
+            "Mumbai",
+            "Kolkata",
+            "Bangalore",
+            "Chennai",
+            "Hyderabad",
+            "Ahmedabad",
+            "Pune",
+          ],
+          axisLabel: {
+            color: "#1f2937",
+            interval: 0,
+            rotate: 30,
+          },
+        },
+        yAxis: {
+          type: "value",
+          name: "Emissions (MT CO₂e)",
+          nameTextStyle: { color: "#1f2937" },
+          axisLabel: { color: "#1f2937" },
+        },
+        series: [
+          {
+            name: "Emissions",
+            data: [76.5, 62.3, 45.2, 38.7, 32.8, 29.5, 27.8, 24.6],
+            type: "bar",
+            barWidth: "60%",
+            itemStyle: {
+              color: "rgba(87, 181, 231, 1)",
+              borderRadius: [8, 8, 0, 0],
+            },
+          },
+        ],
+      });
+      // Seasonal Variations Chart
+      const seasonalVariationsChart = echarts.init(
+        document.getElementById("seasonal-variations-chart")
+      );
+      seasonalVariationsChart.setOption({
+        animation: false,
+        tooltip: {
+          trigger: "axis",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          borderColor: "#e5e7eb",
+          textStyle: { color: "#1f2937" },
+        },
+        grid: { top: 30, right: 10, bottom: 30, left: 60 },
+        legend: {
+          data: ["2023", "2024", "2025"],
+          textStyle: { color: "#1f2937" },
+        },
+        xAxis: {
+          type: "category",
+          data: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ],
+          axisLabel: { color: "#1f2937" },
+        },
+        yAxis: {
+          type: "value",
+          name: "Emissions (MT CO₂e)",
+          nameTextStyle: { color: "#1f2937" },
+          axisLabel: { color: "#1f2937" },
+        },
+        series: [
+          {
+            name: "2023",
+            data: [
+              240, 235, 245, 250, 260, 255, 245, 240, 245, 250, 255, 260,
+            ],
+            type: "line",
+            smooth: true,
+            lineStyle: { color: "rgba(141, 211, 199, 1)" },
+          },
+          {
+            name: "2024",
+            data: [
+              245, 240, 250, 255, 265, 260, 250, 245, 250, 255, 260, 265,
+            ],
+            type: "line",
+            smooth: true,
+            lineStyle: { color: "rgba(251, 191, 114, 1)" },
+          },
+          {
+            name: "2025",
+            data: [
+              250, 245, 255, 260, 270, 265, 255, 250, 255, 260, 265, 270,
+            ],
+            type: "line",
+            smooth: true,
+            lineStyle: { color: "rgba(87, 181, 231, 1)" },
+          },
+        ],
+      });
+      // Industry Chart
+      const industryChart = echarts.init(
+        document.getElementById("industry-chart")
+      );
+      industryChart.setOption({
+        animation: false,
+        tooltip: {
+          trigger: "item",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          borderColor: "#e5e7eb",
+          textStyle: { color: "#1f2937" },
+        },
+        series: [
+          {
+            name: "Industry Breakdown",
+            type: "pie",
+            radius: "70%",
+            itemStyle: {
+              borderRadius: 8,
+              borderColor: "#fff",
+              borderWidth: 2,
+            },
+            label: {
+              show: true,
+              formatter: "{b}: {c}%",
+            },
+            data: [
+              {
+                value: 28,
+                name: "Steel",
+                itemStyle: { color: "rgba(87, 181, 231, 1)" },
+              },
+              {
+                value: 22,
+                name: "Cement",
+                itemStyle: { color: "rgba(141, 211, 199, 1)" },
+              },
+              {
+                value: 18,
+                name: "Chemical",
+                itemStyle: { color: "rgba(251, 191, 114, 1)" },
+              },
+              {
+                value: 12,
+                name: "Textile",
+                itemStyle: { color: "rgba(252, 141, 98, 1)" },
+              },
+              { value: 20, name: "Other", itemStyle: { color: "#94a3b8" } },
+            ],
+          },
+        ],
+      });
+      // Transport Chart
+      const transportChart = echarts.init(
+        document.getElementById("transport-chart")
+      );
+      transportChart.setOption({
+        animation: false,
+        tooltip: {
+          trigger: "item",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          borderColor: "#e5e7eb",
+          textStyle: { color: "#1f2937" },
+        },
+        series: [
+          {
+            name: "Transport Breakdown",
+            type: "pie",
+            radius: "70%",
+            itemStyle: {
+              borderRadius: 8,
+              borderColor: "#fff",
+              borderWidth: 2,
+            },
+            label: {
+              show: true,
+              formatter: "{b}: {c}%",
+            },
+            data: [
+              {
+                value: 45,
+                name: "Private",
+                itemStyle: { color: "rgba(87, 181, 231, 1)" },
+              },
+              {
+                value: 32,
+                name: "Commercial",
+                itemStyle: { color: "rgba(141, 211, 199, 1)" },
+              },
+              {
+                value: 12,
+                name: "Railways",
+                itemStyle: { color: "rgba(251, 191, 114, 1)" },
+              },
+              {
+                value: 8,
+                name: "Aviation",
+                itemStyle: { color: "rgba(252, 141, 98, 1)" },
+              },
+              { value: 3, name: "Shipping", itemStyle: { color: "#94a3b8" } },
+            ],
+          },
+        ],
+      });
+      // Power Chart
+      const powerChart = echarts.init(document.getElementById("power-chart"));
+      powerChart.setOption({
+        animation: false,
+        tooltip: {
+          trigger: "item",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          borderColor: "#e5e7eb",
+          textStyle: { color: "#1f2937" },
+        },
+        series: [
+          {
+            name: "Power Sector",
+            type: "pie",
+            radius: "70%",
+            itemStyle: {
+              borderRadius: 8,
+              borderColor: "#fff",
+              borderWidth: 2,
+            },
+            label: {
+              show: true,
+              formatter: "{b}: {c}%",
+            },
+            data: [
+              {
+                value: 70,
+                name: "Coal",
+                itemStyle: { color: "rgba(87, 181, 231, 1)" },
+              },
+              {
+                value: 7,
+                name: "Natural Gas",
+                itemStyle: { color: "rgba(141, 211, 199, 1)" },
+              },
+              {
+                value: 3,
+                name: "Diesel",
+                itemStyle: { color: "rgba(251, 191, 114, 1)" },
+              },
+              {
+                value: 12,
+                name: "Losses",
+                itemStyle: { color: "rgba(252, 141, 98, 1)" },
+              },
+              { value: 8, name: "Other", itemStyle: { color: "#94a3b8" } },
+            ],
+          },
+        ],
+      });
+      // Agriculture Chart
+      const agricultureChart = echarts.init(
+        document.getElementById("agriculture-chart")
+      );
+      agricultureChart.setOption({
+        animation: false,
+        tooltip: {
+          trigger: "item",
+          backgroundColor: "rgba(255, 255, 255, 0.8)",
+          borderColor: "#e5e7eb",
+          textStyle: { color: "#1f2937" },
+        },
+        series: [
+          {
+            name: "Agriculture",
+            type: "pie",
+            radius: "70%",
+            itemStyle: {
+              borderRadius: 8,
+              borderColor: "#fff",
+              borderWidth: 2,
+            },
+            label: {
+              show: true,
+              formatter: "{b}: {c}%",
+            },
+            data: [
+              {
+                value: 42,
+                name: "Livestock",
+                itemStyle: { color: "rgba(87, 181, 231, 1)" },
+              },
+              {
+                value: 25,
+                name: "Rice",
+                itemStyle: { color: "rgba(141, 211, 199, 1)" },
+              },
+              {
+                value: 18,
+                name: "Fertilizer",
+                itemStyle: { color: "rgba(251, 191, 114, 1)" },
+              },
+              {
+                value: 10,
+                name: "Machinery",
+                itemStyle: { color: "rgba(252, 141, 98, 1)" },
+              },
+              {
+                value: 5,
+                name: "Crop Burning",
+                itemStyle: { color: "#94a3b8" },
+              },
+            ],
+          },
+        ],
+      });
+      // Handle window resize
+      window.addEventListener("resize", function () {
+        [
+          totalEmissionsChart,
+          yoyChart,
+          perCapitaChart,
+          splitChart,
+          historicalTrendsChart,
+          sectorDistributionChart,
+          citiesComparisonChart,
+          seasonalVariationsChart,
+          industryChart,
+          transportChart,
+          powerChart,
+          agricultureChart,
+        ].forEach((chart) => {
+          chart.resize();
+        });
+        cityTrends.forEach((city) => {
+          const chart = echarts.getInstanceByDom(
+            document.getElementById(city.id)
+          );
+          if (chart) chart.resize();
+        });
+      });
+    });
+  </script>
+</body>
+</html>

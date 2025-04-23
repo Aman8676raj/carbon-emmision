@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Info - EcoTrack</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/scrollreveal@4.0.0/dist/scrollreveal.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f0fdf4;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 2rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1a4d2e;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-link {
+      color: #1a4d2e;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: #4ade80;
+    }
+
+    .icon {
+      width: 3rem;
+      height: 3rem;
+      color: #4ade80;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white shadow-sm">
+    <div class="container flex justify-between items-center py-4">
+      <h1 class="text-2xl font-bold text-green-700 flex items-center gap-2">
+        <img src="https://img.icons8.com/ios-filled/50/26e07f/leaf.png" alt="EcoTrack Logo" class="w-8 h-8"> EcoTrack
+      </h1>
+      <nav class="space-x-6">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="calculator.html" class="nav-link">Calculator</a>
+        <a href="dashboard.html" class="nav-link">Dashboard</a>
+        <a href="info.html" class="nav-link font-semibold">Info</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section
+    class="relative h-80 bg-gradient-to-r from-green-100 to-green-200 text-center flex items-center justify-center">
+    <div class="container">
+      <h1 class="text-4xl md:text-5xl font-bold text-green-800">Understanding Carbon Emissions</h1>
+      <p class="mt-4 text-lg text-green-700 max-w-2xl mx-auto">Learn about carbon emissions, their impact on our planet,
+        and how you can make a difference.</p>
+    </div>
+  </section>
+
+  <!-- About Carbon Emissions Section -->
+  <section class="container py-20">
+    <h2 class="section-title">What Are Carbon Emissions?</h2>
+    <div class="card max-w-3xl mx-auto">
+      <p class="text-gray-600 leading-relaxed">
+        Carbon emissions refer to the release of carbon dioxide (CO₂) and other greenhouse gases into the atmosphere,
+        primarily from human activities like burning fossil fuels, deforestation, and industrial processes. These gases
+        trap heat, contributing to global warming and climate change, which lead to rising sea levels, extreme weather,
+        and ecosystem disruption.
+      </p>
+      <p class="mt-4 text-gray-600 leading-relaxed">
+        Everyday actions, such as driving, using electricity, and consuming goods, contribute to your carbon
+        footprint—the total amount of greenhouse gases you produce. By understanding and reducing emissions, we can
+        mitigate climate change and protect our planet for future generations.
+      </p>
+    </div>
+  </section>
+
+  <!-- Key Sources of Carbon Emissions -->
+  <section class="container py-20 bg-green-50">
+    <h2 class="section-title">Key Sources of Carbon Emissions</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="card text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon mx-auto mb-4" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <h3 class="text-xl font-semibold text-green-800 mb-2">Energy Production</h3>
+        <p class="text-gray-600">Burning coal, oil, and natural gas for electricity and heat is the largest source of
+          global CO₂ emissions.</p>
+      </div>
+      <div class="card text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon mx-auto mb-4" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        <h3 class="text-xl font-semibold text-green-800 mb-2">Transportation</h3>
+        <p class="text-gray-600">Cars, trucks, planes, and ships emit significant CO₂, especially when powered by fossil
+          fuels.</p>
+      </div>
+      <div class="card text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon mx-auto mb-4" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+        </svg>
+        <h3 class="text-xl font-semibold text-green-800 mb-2">Industry</h3>
+        <p class="text-gray-600">Manufacturing and construction release CO₂ through energy use and chemical processes.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why It Matters Section -->
+  <section class="container py-20">
+    <h2 class="section-title">Why It Matters</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="card">
+        <h3 class="text-xl font-semibold text-green-800 mb-2">Climate Change</h3>
+        <p class="text-gray-600">Rising CO₂ levels increase global temperatures, leading to extreme weather, melting ice
+          caps, and biodiversity loss.</p>
+      </div>
+      <div class="card">
+        <h3 class="text-xl font-semibold text-green-800 mb-2">Health Impacts</h3>
+        <p class="text-gray-600">Emissions contribute to air pollution, causing respiratory issues and other health
+          problems for communities worldwide.</p>
+      </div>
+      <div class="card">
+        <h3 class="text-xl font-semibold text-green-800 mb-2">Economic Costs</h3>
+        <p class="text-gray-600">Climate change disrupts agriculture, infrastructure, and economies, costing billions
+          annually.</p>
+      </div>
+      <div class="card">
+        <h3 class="text-xl font-semibold text-green-800 mb-2">Future Generations</h3>
+        <p class="text-gray-600">Reducing emissions ensures a sustainable planet for our children and beyond.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How You Can Help Section -->
+  <section class="container py-20 bg-green-50">
+    <h2 class="section-title">How You Can Help</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="card text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon mx-auto mb-4" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+        <h3 class="text-xl font-semibold text-green-800 mb-2">Use Clean Energy</h3>
+        <p class="text-gray-600">Switch to renewable energy sources like solar or wind to lower your carbon footprint.
+        </p>
+      </div>
+      <div class="card text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon mx-auto mb-4" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <h3 class="text-xl font-semibold text-green-800 mb-2">Reduce Waste</h3>
+        <p class="text-gray-600">Recycle, compost, and choose reusable products to minimize landfill emissions.</p>
+      </div>
+      <div class="card text-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon mx-auto mb-4" fill="none" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+        <h3 class="text-xl font-semibold text-green-800 mb-2">Advocate</h3>
+        <p class="text-gray-600">Support policies and initiatives that promote sustainability and reduce emissions.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-green-600 text-white py-6 text-center">
+    <p>© 2025 EcoTrack | All Rights Reserved</p>
+  </footer>
+
+  <script>
+    // ScrollReveal Animations
+    ScrollReveal().reveal('.card', { delay: 200, distance: '30px', origin: 'bottom', duration: 800, easing: 'ease-out' });
+    ScrollReveal().reveal('.section-title', { delay: 100, distance: '20px', origin: 'top', duration: 600 });
+  </script>
+
+</body>
+
+</html>
